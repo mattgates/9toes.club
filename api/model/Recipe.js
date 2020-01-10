@@ -1,66 +1,67 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const recipeSchema = new mongoose.Schema({
+const recipeSchema = new mongoose.Schema(
+  {
     title: {
-        type: String,
-        min: 1,
-        max: 200,
-        required: true
+      type: String,
+      min: 1,
+      max: 200,
+      required: true
     },
     cookTime: {
-        type: String,
-        min: 5,
-        max: 50,
-        required: true
+      type: String,
+      min: 1,
+      max: 20,
+      required: true
     },
     prepTime: {
-        type: String,
-        min: 5,
-        max: 50,
-        required: true
+      type: String,
+      min: 1,
+      max: 20,
+      required: true
     },
     ingredients: {
-        type: [String],
-        min: 1,
-        max: 20000,
-        required: true
+      type: [String],
+      min: 1,
+      max: 20000,
+      required: true
     },
     instructions: {
-        type: [String],
-        min: 1,
-        max: 20000,
-        required: true
+      type: [String],
+      min: 1,
+      max: 20000,
+      required: true
     },
     author: {
-        type: String,
-        required: true,
-        min: 1,
-        max: 40
+      type: String,
+      required: true,
+      min: 1,
+      max: 40
     },
     type: {
-        type: String,
-        required: true,
-        min: 1,
-        max: 40
+      type: String,
+      required: true,
+      min: 1,
+      max: 40
     },
     date: {
-        type: Date,
-        default: Date.now
+      type: Date,
+      default: Date.now
     },
     hidden: {
-        type: Boolean,
-        required: true,
-        default: false
+      type: Boolean,
+      required: true
     },
     submittedBy: {
-        type: String,
-        required: true,
-        min: 1,
-        max: 40
+      type: String,
+      required: true,
+      min: 1,
+      max: 40
     }
-},
-{
-    collection: 'recipes'
-});
+  },
+  {
+    collection: "recipes"
+  }
+);
 
-module.exports = mongoose.model('Recipe', recipeSchema);
+module.exports = mongoose.model("Recipe", recipeSchema);
