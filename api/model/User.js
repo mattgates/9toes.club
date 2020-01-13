@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+//Schema for the collection that holds user submission data
+//username, submissions, appetizer, breakfast, brunch, dessert, dinner, drink, lunch, snack, date, and hidden
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -61,8 +63,8 @@ const userSchema = new mongoose.Schema({
         default: false
     }
 },
-{
-    collection: 'users'
-});
+    {
+        collection: 'users'
+    });
 
 module.exports = mongoose.model('User', userSchema);

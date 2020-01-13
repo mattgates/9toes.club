@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+//Schema for the collection that holds user login/account data
+//username, email, password, and (creation) date
 const accountSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -24,8 +26,8 @@ const accountSchema = new mongoose.Schema({
         default: Date.now
     }
 },
-{
-    collection: 'accounts'
-});
+    {
+        collection: 'accounts'
+    });
 
 module.exports = mongoose.model('Account', accountSchema);
