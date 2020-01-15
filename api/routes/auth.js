@@ -76,9 +76,8 @@ router.post("/register", async (req, res) => {
   });
   try {
     const savedAccount = await account.save();
-    res.send({ user: savedAccount.username });
   } catch (err) {
-    res.status(400).send(err);
+    return res.status(400).send(err);
   }
 
   //attempts to add new user to the User collection
@@ -87,9 +86,9 @@ router.post("/register", async (req, res) => {
   });
   try {
     const savedUser = await user.save();
-    res.send({ user: savedUser.username });
+    return res.send({ user: savedUser.username });
   } catch (err) {
-    res.status(400).send(err);
+    return res.status(400).send(err);
   }
 });
 

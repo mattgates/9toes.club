@@ -9,6 +9,7 @@ import Register from "./pages/register";
 import Login from "./pages/login";
 import Users from "./pages/users";
 import User from "./pages/user";
+import Edit from "./pages/edit";
 import GlobalState from './context/GlobalState';
 
 const App = props => {
@@ -17,14 +18,15 @@ const App = props => {
       <BrowserRouter>
         <NavBar />
         <Switch>
-          <Route path="/recipes" component={Recipes} />
-          <Route path="/users/:username/:id" component={Recipe} />
           <Route exact path="/" component={Home} />
+          <Route path="/recipes" component={Recipes} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/upload" component={Upload} />
           <Route exact path="/users" component={Users} />
           <Route exact path="/users/:username" component={User} />
+          <Route exact path="/users/:username/:id" component={Recipe} />
+          <Route exact path="/users/:username/:id/edit" component={Edit} />
         </Switch>
       </BrowserRouter>
     </GlobalState>

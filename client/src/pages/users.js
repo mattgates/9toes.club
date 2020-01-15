@@ -55,7 +55,7 @@ class Users extends React.Component {
                         as={Card.Header}
                         variant="info"
                         eventKey={i}
-                        style={{ backgroundColor: "teal", color: "white" }}
+                        style={{ backgroundColor: "#169eb4", color: "white" }}
                       >
                         <Container>
                           <Row>
@@ -68,9 +68,7 @@ class Users extends React.Component {
                     </Card.Header>
                     <Accordion.Collapse eventKey={i}>
                       <Card.Body>
-                        {/* <Container>
-                          <Row>
-                            <Col> */}
+                        <Button size="sm" variant="outline-info" href={`/users/${this.state.username[i]}`}>View Recipes</Button>
                         {this.state.appetizer[i] > 0 && <Badge pill variant="info" className="m-1">Appetizer {this.state.appetizer[i]}</Badge>}
                         {this.state.breakfast[i] > 0 && <Badge pill variant="info" className="m-1">Breakfast {this.state.breakfast[i]}</Badge>}
                         {this.state.brunch[i] > 0 && <Badge pill variant="info" className="m-1">Brunch {this.state.brunch[i]}</Badge>}
@@ -79,13 +77,6 @@ class Users extends React.Component {
                         {this.state.drink[i] > 0 && <Badge pill variant="info" className="m-1">Drink {this.state.drink[i]}</Badge>}
                         {this.state.lunch[i] > 0 && <Badge pill variant="info" className="m-1">Lunch {this.state.lunch[i]}</Badge>}
                         {this.state.snack[i] > 0 && <Badge pill variant="info" className="m-1">Snack {this.state.snack[i]}</Badge>}
-                        {/* </Col> */}
-                        {/* <Col> */}
-                        <Button href={`/users/${this.state.username[i]}`}>View Recipes</Button>
-                        {/* </Col>
-                          </Row>
-                        </Container> */}
-
                       </Card.Body>
                     </Accordion.Collapse>
                   </div>

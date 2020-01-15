@@ -23,15 +23,14 @@ class Upload extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      response: ""
+      response: "",
+      cancel: false
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   async handleSubmit(event) {
-    console.log(event);
-
     const filteredIngredients = event.ingredients.split(/\n/).filter(Boolean);
     const filteredInstructions = event.instructions.split(/\n/).filter(Boolean);
 
@@ -43,7 +42,7 @@ class Upload extends React.Component {
       `${event.cookTimeHour} ${event.cookTimeMinute}` : (event.cookTimeHour !== "0 Hours" ? event.cookTimeHour :
         event.cookTimeMinute);
 
-    const credited = event.credited === "" ? this.context.username : event.credited;
+    const credited = (event.credited ? event.credited : this.context.username);
 
     const response = await fetch("/api/posts/recipes", {
       method: "POST",
@@ -160,7 +159,7 @@ class Upload extends React.Component {
     ];
 
     return (
-      <Container style={{ width: "30rem" }}>
+      <Container style={{ width: "50rem" }} className="pb-3 pt-3">
         {this.state.response && (
           <Alert
             variant="danger"
@@ -176,218 +175,240 @@ class Upload extends React.Component {
           onSubmit={this.handleSubmit}
           render={({ values, touched, errors, handleChange, handleSubmit }) => (
             <Form noValidate onSubmit={handleSubmit} onChange={handleChange}>
-              <FormGroup>
-                <Form.Label>Recipe Name</Form.Label>
-                <Form.Control
-                  required
-                  type="text"
-                  value={values.title}
-                  onChange={handleChange}
-                  isInvalid={touched.title && errors.title}
-                  placeholder="title"
-                  name="title"
-                />
-                <Form.Control.Feedback type="invalid" name="title">
-                  {errors.title}
-                </Form.Control.Feedback>
-              </FormGroup>
-              <FormGroup>
-                <Form.Label>
-                  Credited To <small>(optional)</small>
-                </Form.Label>
-                <Form.Control
-                  required
-                  type="text"
-                  value={values.credited}
-                  onChange={handleChange}
-                  isInvalid={errors.credited}
-                  placeholder="credited to"
-                  name="credited"
-                />
-                <Form.Control.Feedback type="invalid" name="credited">
-                  {errors.credited}
-                </Form.Control.Feedback>
-              </FormGroup>
-              <label>Food Type</label>
-              <Container>
-                <Row>
-                  <Col md={3}>
-                    <Form.Check
-                      custom
-                      inline
-                      label="Appetizer"
-                      type="checkbox"
+              <Row>
+                <Col>
+                  <FormGroup>
+                    <Form.Label>Recipe Name</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      value={values.title}
                       onChange={handleChange}
-                      value={values.appetizer}
-                      id="appetizer"
-                      isInvalid={touched.appetizer && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
+                      isInvalid={touched.title && errors.title}
+                      placeholder="title"
+                      name="title"
                     />
-                  </Col>
-                  <Col md={3}>
-                    <Form.Check
-                      custom
-                      inline
-                      label="Breakfast"
-                      type="checkbox"
+                    <Form.Control.Feedback type="invalid" name="title">
+                      {errors.title}
+                    </Form.Control.Feedback>
+                  </FormGroup>
+                </Col>
+                <Col>
+                  <FormGroup>
+                    <Form.Label>
+                      Credited To <small>(optional)</small>
+                    </Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      value={values.credited}
                       onChange={handleChange}
-                      value={values.breakfast}
-                      id="breakfast"
-                      isInvalid={touched.breakfast && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
+                      isInvalid={errors.credited}
+                      placeholder="credited to"
+                      name="credited"
                     />
-                  </Col>
-                  <Col md={3}>
-                    <Form.Check
-                      custom
-                      inline
-                      label="Brunch"
-                      type="checkbox"
-                      onChange={handleChange}
-                      value={values.brunch}
-                      id="brunch"
-                      isInvalid={touched.brunch && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
-                    />
-                  </Col>
-                  <Col md={3}>
-                    <Form.Check
-                      custom
-                      inline
-                      label="Dessert"
-                      type="checkbox"
-                      onChange={handleChange}
-                      value={values.dessert}
-                      id="dessert"
-                      isInvalid={touched.dessert && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col md={3}>
-                    <Form.Check
-                      custom
-                      inline
-                      label="Dinner"
-                      type="checkbox"
-                      onChange={handleChange}
-                      value={values.dinner}
-                      id="dinner"
-                      isInvalid={touched.dinner && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
-                    />
-                  </Col>
-                  <Col md={3}>
-                    <Form.Check
-                      custom
-                      inline
-                      label="Drink"
-                      type="checkbox"
-                      onChange={handleChange}
-                      value={values.drink}
-                      id="drink"
-                      isInvalid={touched.drink && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
-                    />
-                  </Col>
-                  <Col md={3}>
-                    <Form.Check
-                      custom
-                      inline
-                      label="Lunch"
-                      type="checkbox"
-                      onChange={handleChange}
-                      value={values.lunch}
-                      id="lunch"
-                      isInvalid={touched.lunch && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
-                    />
-                  </Col>
-                  <Col md={3}>
-                    <Form.Check
-                      custom
-                      inline
-                      label="Snack"
-                      type="checkbox"
-                      onChange={handleChange}
-                      value={values.snack}
-                      id="snack"
-                      isInvalid={touched.snack && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
-                    />
-                  </Col>
-                </Row>
-              </Container>
-              <label>Prep Time</label>
-              <Form.Row>
-                <FormGroup as={Col}>
-                  <Form.Control
-                    as="select"
-                    required
-                    value={values.prepTimeHour}
+                    <Form.Control.Feedback type="invalid" name="credited">
+                      {errors.credited}
+                    </Form.Control.Feedback>
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row
+                style={{ textAlign: "center", borderTop: "1px solid lightGray" }}
+                className="pt-2">
+                <Col>
+                  <label>Food Type</label>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Form.Check
+                    custom
+                    inline
+                    label="Appetizer"
+                    type="checkbox"
                     onChange={handleChange}
-                    isInvalid={touched.prepTimeHour && values.prepTimeMinute === "0 Minutes" && values.prepTimeHour === "0 Hours"}
-                    name="prepTimeHour"
-                  >
-                    {hours.map((item, i) => (
-                      <option key={i} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                  </Form.Control>
-                  <Form.Control.Feedback type="invalid">Please input time</Form.Control.Feedback>
-                </FormGroup>
-                <FormGroup as={Col}>
-                  <Form.Control
-                    as="select"
-                    required
-                    value={values.prepTimeMinute}
-                    isInvalid={touched.prepTimeMinute && values.prepTimeMinute === "0 Minutes" && values.prepTimeHour === "0 Hours"}
+                    value={values.appetizer}
+                    id="appetizer"
+                    isInvalid={touched.appetizer && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
+                  />
+                </Col>
+                <Col>
+                  <Form.Check
+                    custom
+                    inline
+                    label="Breakfast"
+                    type="checkbox"
                     onChange={handleChange}
-                    name="prepTimeMinute"
-                  >
-                    {minutes.map((item, i) => (
-                      <option value={item} key={i}>
-                        {item}
-                      </option>
-                    ))}
-                  </Form.Control>
-                </FormGroup>
-              </Form.Row>
-              <label>Cook Time</label>
-              <Form.Row>
-                <FormGroup as={Col}>
-                  <Form.Control
-                    as="select"
-                    required
-                    value={values.cookTimeHour}
+                    value={values.breakfast}
+                    id="breakfast"
+                    isInvalid={touched.breakfast && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
+                  />
+                </Col>
+                <Col>
+                  <Form.Check
+                    custom
+                    inline
+                    label="Brunch"
+                    type="checkbox"
                     onChange={handleChange}
-                    isInvalid={touched.cookTimeHour && values.cookTimeMinute === "0 Minutes" && values.cookTimeHour === "0 Hours"}
-                    name="cookTimeHour"
-                  >
-                    {hours.map((item, i) => (
-                      <option key={i} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                  </Form.Control>
-                  <Form.Control.Feedback type="invalid">Please input time</Form.Control.Feedback>
-                </FormGroup>
-                <FormGroup as={Col}>
-                  <Form.Control
-                    as="select"
-                    required
-                    value={values.cookTimeMinute}
-                    isInvalid={touched.cookTimeMinute && values.cookTimeMinute === "0 Minutes" && values.cookTimeHour === "0 Hours"}
+                    value={values.brunch}
+                    id="brunch"
+                    isInvalid={touched.brunch && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
+                  />
+                </Col>
+                <Col>
+                  <Form.Check
+                    custom
+                    inline
+                    label="Dessert"
+                    type="checkbox"
                     onChange={handleChange}
-                    name="cookTimeMinute"
-                  >
-                    {minutes.map((item, i) => (
-                      <option value={item} key={i}>
-                        {item}
-                      </option>
-                    ))}
-                  </Form.Control>
-                </FormGroup>
-              </Form.Row>
-              <Form.Group>
+                    value={values.dessert}
+                    id="dessert"
+                    isInvalid={touched.dessert && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
+                  />
+                </Col>
+              </Row>
+              <Row className="pb-2">
+                <Col>
+                  <Form.Check
+                    custom
+                    inline
+                    label="Dinner"
+                    type="checkbox"
+                    onChange={handleChange}
+                    value={values.dinner}
+                    id="dinner"
+                    isInvalid={touched.dinner && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
+                  />
+                </Col>
+                <Col>
+                  <Form.Check
+                    custom
+                    inline
+                    label="Drink"
+                    type="checkbox"
+                    onChange={handleChange}
+                    value={values.drink}
+                    id="drink"
+                    isInvalid={touched.drink && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
+                  />
+                </Col>
+                <Col>
+                  <Form.Check
+                    custom
+                    inline
+                    label="Lunch"
+                    type="checkbox"
+                    onChange={handleChange}
+                    value={values.lunch}
+                    id="lunch"
+                    isInvalid={touched.lunch && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
+                  />
+                </Col>
+                <Col>
+                  <Form.Check
+                    custom
+                    inline
+                    label="Snack"
+                    type="checkbox"
+                    onChange={handleChange}
+                    value={values.snack}
+                    id="snack"
+                    isInvalid={touched.snack && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
+                  />
+                </Col>
+              </Row>
+              <Row style={{ borderTop: "1px solid lightGray" }} className="pt-2">
+                <Col style={{ textAlign: "center" }}>
+                  <label>Prep Time</label>
+                </Col>
+                <Col style={{ textAlign: "center", borderLeft: "1px solid lightGray" }}>
+                  <label>Cook Time</label>
+                </Col>
+              </Row>
+              <Row style={{ borderBottom: "1px solid lightGray" }} className="pb-2">
+                <Col>
+                  <FormGroup>
+                    <Form.Control
+                      as="select"
+                      required
+                      value={values.prepTimeHour}
+                      onChange={handleChange}
+                      isInvalid={touched.prepTimeHour && values.prepTimeMinute === "0 Minutes" && values.prepTimeHour === "0 Hours"}
+                      name="prepTimeHour"
+                    >
+                      {hours.map((item, i) => (
+                        <option key={i} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </Form.Control>
+                    <Form.Control.Feedback type="invalid">Please input time</Form.Control.Feedback>
+                  </FormGroup>
+                </Col>
+                <Col>
+                  <FormGroup>
+                    <Form.Control
+                      as="select"
+                      required
+                      value={values.prepTimeMinute}
+                      isInvalid={touched.prepTimeMinute && values.prepTimeMinute === "0 Minutes" && values.prepTimeHour === "0 Hours"}
+                      onChange={handleChange}
+                      name="prepTimeMinute"
+                    >
+                      {minutes.map((item, i) => (
+                        <option value={item} key={i}>
+                          {item}
+                        </option>
+                      ))}
+                    </Form.Control>
+                  </FormGroup>
+                </Col>
+                <Col style={{ borderLeft: "1px solid lightGray" }}>
+                  <FormGroup>
+                    <Form.Control
+                      as="select"
+                      required
+                      value={values.cookTimeHour}
+                      onChange={handleChange}
+                      isInvalid={touched.cookTimeHour && values.cookTimeMinute === "0 Minutes" && values.cookTimeHour === "0 Hours"}
+                      name="cookTimeHour"
+                    >
+                      {hours.map((item, i) => (
+                        <option key={i} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </Form.Control>
+                    <Form.Control.Feedback type="invalid">Please input time</Form.Control.Feedback>
+                  </FormGroup>
+                </Col>
+                <Col>
+                  <FormGroup>
+                    <Form.Control
+                      as="select"
+                      required
+                      value={values.cookTimeMinute}
+                      isInvalid={touched.cookTimeMinute && values.cookTimeMinute === "0 Minutes" && values.cookTimeHour === "0 Hours"}
+                      onChange={handleChange}
+                      name="cookTimeMinute"
+                    >
+                      {minutes.map((item, i) => (
+                        <option value={item} key={i}>
+                          {item}
+                        </option>
+                      ))}
+                    </Form.Control>
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Form.Group className="pt-2 pb-2">
                 <Form.Label>Ingredients</Form.Label>
                 <Form.Control
                   as="textarea"
-                  rows={5}
+                  rows={7}
                   name="ingredients"
                   type="text"
                   onChange={handleChange}
@@ -397,11 +418,11 @@ class Upload extends React.Component {
                 />
                 <Form.Control.Feedback type="invalid">Please input the ingredients</Form.Control.Feedback>
               </Form.Group>
-              <Form.Group>
+              <Form.Group className="pt-2 pb-2" style={{ borderTop: "1px solid lightGray" }}>
                 <Form.Label>Instructions</Form.Label>
                 <Form.Control
                   as="textarea"
-                  rows={5}
+                  rows={7}
                   name="instructions"
                   type="text"
                   onChange={handleChange}
@@ -413,20 +434,21 @@ class Upload extends React.Component {
                 />
                 <Form.Control.Feedback type="invalid">Please input the instructions</Form.Control.Feedback>
               </Form.Group>
-              <Form.Group>
+              <Form.Group className="pt-2 pb-2" style={{ borderTop: "1px solid lightGray" }}>
                 <Form.Label>
                   About This Recipe <small>(optional)</small>
                 </Form.Label>
                 <Form.Control
                   as="textarea"
-                  rows={5}
+                  rows={7}
                   name="about"
                   type="text"
                   onChange={handleChange}
                   value={values.about}
                 />
               </Form.Group>
-              <FormGroup>
+              <FormGroup className="pt-2 pb-2"
+                style={{ borderTop: "1px solid lightGray", borderBottom: "1px solid lightGray" }}>
                 <Form.Label>Hidden <small>(optional)</small></Form.Label>
                 <Form.Check
                   custom
@@ -437,9 +459,24 @@ class Upload extends React.Component {
                   id="hidden"
                 />
               </FormGroup>
-              <Button type="submit">
-                Submit Recipe
+              <Row>
+                <Col>
+                  <Button variant="outline-success" type="submit">
+                    Submit Recipe
               </Button>
+                </Col>
+                {!this.state.cancel &&
+                  <Col>
+                    <Button variant="outline-danger" onClick={() => { this.setState({ cancel: true }) }} className="float-right">Cancel</Button>
+                  </Col>
+                }
+                {this.state.cancel &&
+                  <Col>
+                    <Button variant="outline-dark" onClick={() => { this.setState({ cancel: false }) }} className="float-right">Nevermind</Button>
+                    <Button variant="danger" href="/" className="float-right mr-2">Cancel my post</Button>
+                  </Col>
+                }
+              </Row>
             </Form>
           )}
         />

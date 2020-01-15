@@ -137,11 +137,9 @@ class Register extends React.Component {
                 <Form.Control.Feedback type="invalid" name="password">
                   {errors.password}
                 </Form.Control.Feedback>
-                <Form.Text>
-                  Passwords must be at least 12 characters long.
-                </Form.Text>
               </FormGroup>
-              <Button type="submit">Create Account</Button>
+              <Button variant="outline-info" type="submit" className="mr-2">Create Account</Button>
+              <Button variant="outline-info" href="/login">I already have an account</Button>
             </Form>
           )}
         />

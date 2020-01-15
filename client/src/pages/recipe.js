@@ -1,6 +1,7 @@
 import React from "react";
 import "../App.css";
-import { Jumbotron, Badge } from "react-bootstrap";
+import { Jumbotron, Badge, Button } from "react-bootstrap";
+import UserContext from '../context/UserContext';
 
 class Recipe extends React.Component {
   constructor(props) {
@@ -52,35 +53,44 @@ class Recipe extends React.Component {
 
   render() {
     return (
-      <Jumbotron>
-        <h1>{this.state.title}</h1>
-        {this.state.appetizer && <Badge pill variant="info" className="m-1">Appetizer</Badge>}
-        {this.state.breakfast && <Badge pill variant="info" className="m-1">Breakfast</Badge>}
-        {this.state.brunch && <Badge pill variant="info" className="m-1">Brunch</Badge>}
-        {this.state.dessert && <Badge pill variant="info" className="m-1">Dessert</Badge>}
-        {this.state.dinner && <Badge pill variant="info" className="m-1">Dinner</Badge>}
-        {this.state.drink && <Badge pill variant="info" className="m-1">Drink</Badge>}
-        {this.state.lunch && <Badge pill variant="info" className="m-1">Lunch</Badge>}
-        {this.state.snack && <Badge pill variant="info" className="m-1">Snack</Badge>}
-        <h3>
-          Submitted by {this.state.submittedBy}
-          {/* {this.state.submittedBy !== this.state.credited && `and credited to ${this.state.credited}`} */}
-        </h3>
-        <h5>Prep Time: {this.state.prepTime}</h5>
-        <h5>Cook Time: {this.state.cookTime}</h5>
-        <h5>Ingredients</h5>
-        <ul>
-          {this.state.ingredients.map((item, i) => (
-            <li key={i}>{item}</li>
-          ))}
-        </ul>
-        <h5>Instructions</h5>
-        <ol>
-          {this.state.instructions.map((item, i) => (
-            <li key={i}>{item}</li>
-          ))}
-        </ol>
-      </Jumbotron>
+      <UserContext.Consumer>
+        {({ username }) => (
+          <Jumbotron>
+            <h1>{this.state.title}</h1>
+            {this.state.appetizer && <Badge pill variant="info" className="m-1">Appetizer</Badge>}
+            {this.state.breakfast && <Badge pill variant="info" className="m-1">Breakfast</Badge>}
+            {this.state.brunch && <Badge pill variant="info" className="m-1">Brunch</Badge>}
+            {this.state.dessert && <Badge pill variant="info" className="m-1">Dessert</Badge>}
+            {this.state.dinner && <Badge pill variant="info" className="m-1">Dinner</Badge>}
+            {this.state.drink && <Badge pill variant="info" className="m-1">Drink</Badge>}
+            {this.state.lunch && <Badge pill variant="info" className="m-1">Lunch</Badge>}
+            {this.state.snack && <Badge pill variant="info" className="m-1">Snack</Badge>}
+            <h3>
+              Submitted by {this.state.submittedBy}
+              {this.state.submittedBy !== this.state.credited && ` and credited to ${this.state.credited}`}
+            </h3>
+            <h5>Prep Time: {this.state.prepTime}</h5>
+            <h5>Cook Time: {this.state.cookTime}</h5>
+            <h5>Ingredients</h5>
+            <ul>
+              {this.state.ingredients.map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
+            </ul>
+            <h5>Instructions</h5>
+            <ol>
+              {this.state.instructions.map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
+            </ol>
+            {username === this.state.submittedBy &&
+              <Button variant="outline-info" href={`/users/${username}/${this.props.match.params.id}/edit`}>
+                Edit
+            </Button>
+            }
+          </Jumbotron>
+        )}
+      </UserContext.Consumer>
     );
   }
 }

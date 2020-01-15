@@ -37,7 +37,8 @@ const recipeSchema = new mongoose.Schema(
     credited: {
       type: String,
       min: 1,
-      max: 40
+      max: 40,
+      required: true
     },
     appetizer: {
       type: Boolean,

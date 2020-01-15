@@ -4,7 +4,7 @@ import { Jumbotron } from "react-bootstrap";
 class Home extends React.Component {
   render() {
     return (
-      <div className="px-5 py-3">
+      <div className="px-5 py-3" >
         <Jumbotron
           style={{
             paddingTop: 1,

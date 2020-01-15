@@ -107,7 +107,8 @@ class Login extends Component {
                   name="password"
                 />
               </FormGroup>
-              <Button type="submit">Login</Button>
+              <Button variant="outline-info" type="submit" className="mr-2">Login</Button>
+              <Button variant="outline-info" href="/register">I don't have an account</Button>
             </Form>
           )}
         />

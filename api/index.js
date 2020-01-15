@@ -11,7 +11,12 @@ const sessionRoute = require("./routes/session");
 
 //Connect to DB using connection string in .env
 dotenv.config();
-mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true }, () =>
+mongoose.connect(process.env.DB_CONNECT, {
+  useNewUrlParser: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
+  useUnifiedTopology: true
+}, () =>
   console.log("The database has been connected to!")
 );
 
