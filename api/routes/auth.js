@@ -1,11 +1,8 @@
 const router = require("express").Router();
 const Account = require("../model/Account");
 const User = require("../model/User");
-const jwt = require("jsonwebtoken");
 const Joi = require("@hapi/joi");
 const bcrypt = require("bcryptjs");
-
-//TODO add console.log() to view activity
 
 //validation for user registration
 const registerValidation = data => {
@@ -62,7 +59,9 @@ router.post("/register", async (req, res) => {
     username: new RegExp("^" + req.body.username + "$", "i")
   });
   if (usernameExists)
-    return res.status(400).send({ error: "That username is already registered." });
+    return res
+      .status(400)
+      .send({ error: "That username is already registered." });
 
   //hash the password again before storage
   const salt = await bcrypt.genSalt(12);
@@ -76,6 +75,7 @@ router.post("/register", async (req, res) => {
   });
   try {
     const savedAccount = await account.save();
+    console.log("Account created " + req.body.username);
   } catch (err) {
     return res.status(400).send(err);
   }
@@ -86,7 +86,8 @@ router.post("/register", async (req, res) => {
   });
   try {
     const savedUser = await user.save();
-    return res.send({ user: savedUser.username });
+    console.log("User created " + req.body.username);
+    return res.status(200).send({ user: savedUser.username });
   } catch (err) {
     return res.status(400).send(err);
   }
@@ -104,14 +105,13 @@ router.post("/login", async (req, res) => {
   });
   if (!user) return res.status(400).send({ error: "Invalid credentials." });
 
-  //compares the user submitted password to the one hashed and stored with that username 
+  //compares the user submitted password to the one hashed and stored with that username
   const validPassword = await bcrypt.compare(req.body.password, user.password);
   if (!validPassword)
     return res.status(400).send({ error: "Invalid credentials." });
 
-  //!figure out what to do with this
-  const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
-  res.send({
+  console.log("Sign in by " + user.username);
+  res.status(200).send({
     response: "Logged in as " + user.username
   });
 });

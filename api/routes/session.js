@@ -36,8 +36,11 @@ router.post("/new", async (req, res) => {
     });
     try {
       const savedSession = await session.save();
+      console.log("New session for " + req.body.username);
       //returns the session id and username if the session was successfully made. these will be used to make cookies to track the session
-      res.send({ _id: savedSession._id, username: savedSession.username });
+      res
+        .status(200)
+        .send({ _id: savedSession._id, username: savedSession.username });
     } catch (err) {
       //? make this return "Invalid request."?
       res.status(400).send({ error: err });
@@ -48,7 +51,6 @@ router.post("/new", async (req, res) => {
 //endpoint to validate a user's session
 router.post("/validate", async (req, res) => {
   //checks to see if both the session id and username were submitted
-  //TODO add regex validation on these since the id isn't in the schema
   if (!req.body._id || !req.body.username) {
     return res.status(400).send({ error: "Invalid request." });
   }
@@ -58,6 +60,7 @@ router.post("/validate", async (req, res) => {
 
   //if the session exists and the usernames match up too then validate the session
   if (sessionExists && req.body.username === sessionExists.username) {
+    console.log("Session validated for " + req.body.username);
     return res.status(200).send({ response: "Valid." });
   }
   //else return invalid
@@ -66,13 +69,13 @@ router.post("/validate", async (req, res) => {
 
 //endpoint to terminate a session id. triggered by logout button
 router.delete("/terminate", async (req, res) => {
-  //TODO add regex to id check
   if (!req.body._id) return res.status(400).send({ error: "Invalid request." });
 
   //looks for the session and terminates it if found
   const sessionExists = await Session.findByIdAndDelete(req.body._id);
 
   if (sessionExists) {
+    console.log("Terminated session for " + req.body.username);
     return res.status(200).send({ response: "Session terminated." });
   } else {
     return res.status(400).send({ error: "Invalid request." });

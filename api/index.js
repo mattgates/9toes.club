@@ -29,4 +29,4 @@ app.use("/api/posts", postRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/session", sessionRoute);
 
-app.listen(5000, () => console.log("The API is now live!"));
+app.listen(3000, () => console.log("The API is now live!"));

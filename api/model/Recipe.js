@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 
 //Schema for the collection that holds recipe submission data
-//title, cookTime, prepTime, ingredients[], instructions[], appetizer, breakfast, brunch, dessert, dinner, drink, lunch, snack, submittedBy, credited, about, hidden, and (creation) date
+//title, cookTime, prepTime, ingredients[], instructions[], appetizer, breakfast, brunch,
+//dessert, dinner, drink, lunch, snack, submittedBy, credited, about, hidden, and (creation) date
 const recipeSchema = new mongoose.Schema(
   {
     title: {
@@ -88,7 +89,9 @@ const recipeSchema = new mongoose.Schema(
     },
     about: {
       type: String,
-      max: 2000
+      min: 1,
+      max: 2000,
+      required: true
     }
   },
   {

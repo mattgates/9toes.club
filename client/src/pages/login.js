@@ -5,11 +5,13 @@ import { Alert, Container, Form, FormGroup, Button } from "react-bootstrap";
 import * as yup from "yup";
 import { Formik } from "formik";
 
+//class for login page
 class Login extends Component {
   static contextType = UserContext;
 
+  //checks if the user is already credentialed. If so then it redirects them home
   componentDidMount() {
-    if (this.context.authenticated) {
+    if (this.context.username) {
       this.props.history.push("/");
     }
   }
@@ -19,27 +21,35 @@ class Login extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  //submission of login data
   async handleSubmit(event) {
+    //I meant to hide the salt before I made the website live. kinda too late now considering people have
+    //already made accounts and what not
+    //At least I made a warning not to put in real credentials. It's properly hashed on the server side
+    //but none of this matters anyways because it's not https
     const hash = sha256(
       event.password + "placeholdersaltuntiligifigureouthowtohideit"
     );
 
+    //attempts to log the user in. The setTimeout is because it was having issues
+    //calling the redirect while waiting on the fetch response even though it's async/await
     await this.context.login({ username: event.username, hash: hash });
     setTimeout(() => {
       if (this.context.username) {
-        this.props.history.push("/")
+        this.props.history.push("/");
       }
-    }, 500)
+    }, 500);
   }
 
   render() {
+    //schema for what usernamesand passwords are accepted
     const schema = yup.object().shape({
       username: yup
         .string()
         .min(3, " ")
         .max(40, " ")
         .required("Enter a username")
-        .matches(/^[a-z0-9]+$/i, " "),
+        .matches(/^[a-z0-9]+$/i, " "), //alphanumeric regex
       password: yup
         .string()
         .min(12, " ")
@@ -107,8 +117,12 @@ class Login extends Component {
                   name="password"
                 />
               </FormGroup>
-              <Button variant="outline-info" type="submit" className="mr-2">Login</Button>
-              <Button variant="outline-info" href="/register">I don't have an account</Button>
+              <Button variant="outline-info" type="submit" className="mr-2">
+                Login
+              </Button>
+              <Button variant="outline-info" href="/register">
+                I don't have an account
+              </Button>
             </Form>
           )}
         />

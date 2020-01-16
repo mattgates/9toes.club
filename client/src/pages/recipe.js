@@ -1,11 +1,13 @@
 import React from "react";
 import "../App.css";
 import { Jumbotron, Badge, Button } from "react-bootstrap";
-import UserContext from '../context/UserContext';
+import UserContext from "../context/UserContext";
 
+//class for displaying a recipe (well aware my file naming convention is awful and confusing)
 class Recipe extends React.Component {
   constructor(props) {
     super(props);
+    //all the data about a recipe
     this.state = {
       title: "",
       credited: "",
@@ -23,10 +25,12 @@ class Recipe extends React.Component {
       dinner: "",
       drink: "",
       lunch: "",
-      snack: ""
+      snack: "",
+      about: ""
     };
   }
 
+  //on load a get request is sent and the data returned is applied to the state
   async componentDidMount() {
     const url = "/api/posts/recipe?_id=" + this.props.match.params.id;
     const response = await fetch(url);
@@ -47,7 +51,8 @@ class Recipe extends React.Component {
       dinner: data.dinner,
       drink: data.drink,
       lunch: data.lunch,
-      snack: data.snack
+      snack: data.snack,
+      about: data.about
     });
   }
 
@@ -57,18 +62,57 @@ class Recipe extends React.Component {
         {({ username }) => (
           <Jumbotron>
             <h1>{this.state.title}</h1>
-            {this.state.appetizer && <Badge pill variant="info" className="m-1">Appetizer</Badge>}
-            {this.state.breakfast && <Badge pill variant="info" className="m-1">Breakfast</Badge>}
-            {this.state.brunch && <Badge pill variant="info" className="m-1">Brunch</Badge>}
-            {this.state.dessert && <Badge pill variant="info" className="m-1">Dessert</Badge>}
-            {this.state.dinner && <Badge pill variant="info" className="m-1">Dinner</Badge>}
-            {this.state.drink && <Badge pill variant="info" className="m-1">Drink</Badge>}
-            {this.state.lunch && <Badge pill variant="info" className="m-1">Lunch</Badge>}
-            {this.state.snack && <Badge pill variant="info" className="m-1">Snack</Badge>}
+            {this.state.appetizer && (
+              <Badge pill variant="info" className="m-1">
+                Appetizer
+              </Badge>
+            )}
+            {this.state.breakfast && (
+              <Badge pill variant="info" className="m-1">
+                Breakfast
+              </Badge>
+            )}
+            {this.state.brunch && (
+              <Badge pill variant="info" className="m-1">
+                Brunch
+              </Badge>
+            )}
+            {this.state.dessert && (
+              <Badge pill variant="info" className="m-1">
+                Dessert
+              </Badge>
+            )}
+            {this.state.dinner && (
+              <Badge pill variant="info" className="m-1">
+                Dinner
+              </Badge>
+            )}
+            {this.state.drink && (
+              <Badge pill variant="info" className="m-1">
+                Drink
+              </Badge>
+            )}
+            {this.state.lunch && (
+              <Badge pill variant="info" className="m-1">
+                Lunch
+              </Badge>
+            )}
+            {this.state.snack && (
+              <Badge pill variant="info" className="m-1">
+                Snack
+              </Badge>
+            )}
             <h3>
               Submitted by {this.state.submittedBy}
-              {this.state.submittedBy !== this.state.credited && ` and credited to ${this.state.credited}`}
+              {this.state.submittedBy !== this.state.credited &&
+                ` and credited to ${this.state.credited}`}
             </h3>
+            {this.state.about !== " " && (
+              <React.Fragment>
+                <h5>About</h5>
+                <p>{this.state.about}</p>
+              </React.Fragment>
+            )}
             <h5>Prep Time: {this.state.prepTime}</h5>
             <h5>Cook Time: {this.state.cookTime}</h5>
             <h5>Ingredients</h5>
@@ -83,11 +127,14 @@ class Recipe extends React.Component {
                 <li key={i}>{item}</li>
               ))}
             </ol>
-            {username === this.state.submittedBy &&
-              <Button variant="outline-info" href={`/users/${username}/${this.props.match.params.id}/edit`}>
+            {username === this.state.submittedBy && (
+              <Button
+                variant="outline-info"
+                href={`/users/${username}/${this.props.match.params.id}/edit`}
+              >
                 Edit
-            </Button>
-            }
+              </Button>
+            )}
           </Jumbotron>
         )}
       </UserContext.Consumer>

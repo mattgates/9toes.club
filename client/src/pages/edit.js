@@ -12,9 +12,11 @@ import {
 import * as yup from "yup";
 import { Formik } from "formik";
 
+//class for the editing functionality of an existing recipe that has been posted by a user
 class Edit extends React.Component {
     constructor(props) {
         super(props);
+        //all of the data that is involved in a recipe
         this.state = {
             title: "",
             credited: "",
@@ -61,21 +63,26 @@ class Edit extends React.Component {
                 "50 Minutes",
                 "55 Minutes"],
             response: "",
-            confirm: false
+            confirm: false //confirm button. true = show delete button
         };
 
-        this.handleDelete = this.handleDelete.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleDelete = this.handleDelete.bind(this); //submit delete request
+        this.handleSubmit = this.handleSubmit.bind(this); //submit edit request
     }
 
     static contextType = UserContext;
 
+    //when the page loads it checks if the user is credentialed to be editing this recipe
     async componentDidMount() {
         const authenticated = await this.context.verify();
+
+        //if the session isn't valid and the user isn't the poster then redirect
         if (!authenticated && this.props.match.params.username !== this.context.username) {
             this.props.history.push("/");
         }
 
+        //fetch the data on this recipe and set the state to it
+        //this is then used to populate the forms with existing recipe data to be edited
         const url = "/api/posts/recipe?_id=" + this.props.match.params.id;
         const response = await fetch(url);
         const data = await response.json();
@@ -98,6 +105,7 @@ class Edit extends React.Component {
             hidden: data.hidden
         });
 
+        //splits the concatinated string into the form drop down values
         for (var hourKey in this.state.hours) {
             if (data.prepTime.includes(this.state.hours[hourKey])) this.setState({ prepTimeHour: this.state.hours[hourKey] });
             if (data.cookTime.includes(this.state.hours[hourKey])) this.setState({ cookTimeHour: this.state.hours[hourKey] });
@@ -108,10 +116,13 @@ class Edit extends React.Component {
         }
     }
 
+    //submits the changes to the recipe
     async handleSubmit(event) {
+        //turns the ingredient/intruction strings into arrays
         const filteredIngredients = event.ingredients.split(/\n/).filter(Boolean);
         const filteredInstructions = event.instructions.split(/\n/).filter(Boolean);
 
+        //convert prep time and cook times into strings
         const prepTimeStr = (event.prepTimeHour !== "0 Hours" && event.prepTimeMinute !== "0 Minutes") ?
             `${event.prepTimeHour} ${event.prepTimeMinute}` : (event.prepTimeHour !== "0 Hours" ? event.prepTimeHour :
                 event.prepTimeMinute);
@@ -120,8 +131,12 @@ class Edit extends React.Component {
             `${event.cookTimeHour} ${event.cookTimeMinute}` : (event.cookTimeHour !== "0 Hours" ? event.cookTimeHour :
                 event.cookTimeMinute);
 
+        //if no person was credited with the recipe then it's set to the submitter
         const credited = (event.credited ? event.credited : this.context.username);
 
+        //this is pretty shit and should be refactored but I cba. every instance of this code is crap
+        //concatinates all the different types of recipes from the checkboxes together in strings
+        //this is used for keeping track of how many of each type of recipe a user has submitted
         let increment = " ";
         let decrement = " ";
 
@@ -150,6 +165,7 @@ class Edit extends React.Component {
             if (this.state.snack) { decrement += "snack"; } else { increment += "snack"; }
         }
 
+        //POST request to edit the recipe
         const response = await fetch("/api/posts/edit", {
             method: "POST",
             headers: {
@@ -175,18 +191,21 @@ class Edit extends React.Component {
                 snack: event.snack,
                 typesToDecrement: decrement,
                 typesToIncrement: increment,
-                _id: this.props.match.params.id
+                _id: this.props.match.params.id,
+                about: event.about ? event.about : " "
             })
         });
-        console.log(response);
         if (response.ok) {
-            this.props.history.push("/");
+            //redirects to the recipe it was successful
+            this.props.history.push("/users/" + this.props.match.params.username + "/" + this.props.match.params.id);
         }
         else {
+            //this populates an alert box if the request was denied
             this.setState({ response: "Please check the forms for errors." });
         }
     }
 
+    //requst to delete the post
     async handleDelete() {
         const response = await fetch("/api/posts/delete", {
             method: "POST",
@@ -195,6 +214,7 @@ class Edit extends React.Component {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
+                title: this.state.title,
                 _id: this.props.match.params.id
             })
         });
@@ -202,11 +222,13 @@ class Edit extends React.Component {
             this.setState({ response: response.error });
         }
         else {
-            this.setState({ response: response.response });
+            //redirects home if the delete was successful
+            this.props.history.push("/")
         }
     }
 
     render() {
+        //schema for accepted form submissions
         const schema = yup.object().shape({
             title: yup
                 .string()
@@ -236,7 +258,7 @@ class Edit extends React.Component {
                 .max(2000, "Writing an essay?")
                 .required(),
             hidden: yup.boolean().required(),
-            about: yup.string().max(2000, "Writing an essay?"),
+            about: yup.string().min(0).max(2000, "Writing an essay?"),
             delete: yup.boolean()
         });
 
@@ -251,6 +273,10 @@ class Edit extends React.Component {
                         {this.state.response}
                     </Alert>
                 )}
+                {/* initializes the forms to have the correct info and handles all the form validation,
+                changes, submission, etc.
+                
+                Not gonna comment the stuff below this. it's just form stuff */}
                 <Formik
                     validationSchema={schema}
                     enableReinitialize

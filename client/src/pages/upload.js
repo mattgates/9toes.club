@@ -12,8 +12,11 @@ import {
 import * as yup from "yup";
 import { Formik } from "formik";
 
+//page for uploading a new recipe
 class Upload extends React.Component {
   static contextType = UserContext;
+
+  //checks if user is authenticate on page load. redirects home if not
   async componentDidMount() {
     const authenticated = await this.context.verify();
     if (!authenticated) {
@@ -24,25 +27,32 @@ class Upload extends React.Component {
     super(props);
     this.state = {
       response: "",
-      cancel: false
+      cancel: false //controls whether the cancel button is there
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  //this is just the same as upload.js handleSubmit
   async handleSubmit(event) {
     const filteredIngredients = event.ingredients.split(/\n/).filter(Boolean);
     const filteredInstructions = event.instructions.split(/\n/).filter(Boolean);
 
-    const prepTimeStr = (event.prepTimeHour !== "0 Hours" && event.prepTimeMinute !== "0 Minutes") ?
-      `${event.prepTimeHour} ${event.prepTimeMinute}` : (event.prepTimeHour !== "0 Hours" ? event.prepTimeHour :
-        event.prepTimeMinute);
+    const prepTimeStr =
+      event.prepTimeHour !== "0 Hours" && event.prepTimeMinute !== "0 Minutes"
+        ? `${event.prepTimeHour} ${event.prepTimeMinute}`
+        : event.prepTimeHour !== "0 Hours"
+        ? event.prepTimeHour
+        : event.prepTimeMinute;
 
-    const cookTimeStr = (event.cookTimeHour !== "0 Hours" && event.cookTimeMinute !== "0 Minutes") ?
-      `${event.cookTimeHour} ${event.cookTimeMinute}` : (event.cookTimeHour !== "0 Hours" ? event.cookTimeHour :
-        event.cookTimeMinute);
+    const cookTimeStr =
+      event.cookTimeHour !== "0 Hours" && event.cookTimeMinute !== "0 Minutes"
+        ? `${event.cookTimeHour} ${event.cookTimeMinute}`
+        : event.cookTimeHour !== "0 Hours"
+        ? event.cookTimeHour
+        : event.cookTimeMinute;
 
-    const credited = (event.credited ? event.credited : this.context.username);
+    const credited = event.credited ? event.credited : this.context.username;
 
     const response = await fetch("/api/posts/recipes", {
       method: "POST",
@@ -67,22 +77,24 @@ class Upload extends React.Component {
         drink: event.drink,
         lunch: event.lunch,
         snack: event.snack,
+        about: event.about ? event.about : " "
       })
     });
     if (response.ok) {
       this.props.history.push("/");
-    }
-    else {
+    } else {
       this.setstate({ response: "Please check the forms for errors." });
     }
   }
 
   render() {
+    //schema for validating form input
     const schema = yup.object().shape({
       title: yup
         .string()
         .min(1)
-        .max(200, "Too long").trim()
+        .max(200, "Too long")
+        .trim()
         .required("You must title your submission"),
       credited: yup
         .string()
@@ -110,6 +122,7 @@ class Upload extends React.Component {
       about: yup.string().max(2000, "Writing an essay?")
     });
 
+    //initializes all values with this and the <Formik> tag below
     const initial = {
       title: "",
       prepTimeMinute: "0 Minutes",
@@ -131,6 +144,7 @@ class Upload extends React.Component {
       about: ""
     };
 
+    //hours and minutes populate the drop downs for prep/cook times
     const hours = [
       "0 Hours",
       "1 Hour",
@@ -214,8 +228,12 @@ class Upload extends React.Component {
                 </Col>
               </Row>
               <Row
-                style={{ textAlign: "center", borderTop: "1px solid lightGray" }}
-                className="pt-2">
+                style={{
+                  textAlign: "center",
+                  borderTop: "1px solid lightGray"
+                }}
+                className="pt-2"
+              >
                 <Col>
                   <label>Food Type</label>
                 </Col>
@@ -230,7 +248,17 @@ class Upload extends React.Component {
                     onChange={handleChange}
                     value={values.appetizer}
                     id="appetizer"
-                    isInvalid={touched.appetizer && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
+                    isInvalid={
+                      touched.appetizer &&
+                      !values.appetizer &&
+                      !values.breakfast &&
+                      !values.brunch &&
+                      !values.dessert &&
+                      !values.dinner &&
+                      !values.drink &&
+                      !values.lunch &&
+                      !values.snack
+                    }
                   />
                 </Col>
                 <Col>
@@ -242,7 +270,17 @@ class Upload extends React.Component {
                     onChange={handleChange}
                     value={values.breakfast}
                     id="breakfast"
-                    isInvalid={touched.breakfast && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
+                    isInvalid={
+                      touched.breakfast &&
+                      !values.appetizer &&
+                      !values.breakfast &&
+                      !values.brunch &&
+                      !values.dessert &&
+                      !values.dinner &&
+                      !values.drink &&
+                      !values.lunch &&
+                      !values.snack
+                    }
                   />
                 </Col>
                 <Col>
@@ -254,7 +292,17 @@ class Upload extends React.Component {
                     onChange={handleChange}
                     value={values.brunch}
                     id="brunch"
-                    isInvalid={touched.brunch && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
+                    isInvalid={
+                      touched.brunch &&
+                      !values.appetizer &&
+                      !values.breakfast &&
+                      !values.brunch &&
+                      !values.dessert &&
+                      !values.dinner &&
+                      !values.drink &&
+                      !values.lunch &&
+                      !values.snack
+                    }
                   />
                 </Col>
                 <Col>
@@ -266,7 +314,17 @@ class Upload extends React.Component {
                     onChange={handleChange}
                     value={values.dessert}
                     id="dessert"
-                    isInvalid={touched.dessert && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
+                    isInvalid={
+                      touched.dessert &&
+                      !values.appetizer &&
+                      !values.breakfast &&
+                      !values.brunch &&
+                      !values.dessert &&
+                      !values.dinner &&
+                      !values.drink &&
+                      !values.lunch &&
+                      !values.snack
+                    }
                   />
                 </Col>
               </Row>
@@ -280,7 +338,17 @@ class Upload extends React.Component {
                     onChange={handleChange}
                     value={values.dinner}
                     id="dinner"
-                    isInvalid={touched.dinner && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
+                    isInvalid={
+                      touched.dinner &&
+                      !values.appetizer &&
+                      !values.breakfast &&
+                      !values.brunch &&
+                      !values.dessert &&
+                      !values.dinner &&
+                      !values.drink &&
+                      !values.lunch &&
+                      !values.snack
+                    }
                   />
                 </Col>
                 <Col>
@@ -292,7 +360,17 @@ class Upload extends React.Component {
                     onChange={handleChange}
                     value={values.drink}
                     id="drink"
-                    isInvalid={touched.drink && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
+                    isInvalid={
+                      touched.drink &&
+                      !values.appetizer &&
+                      !values.breakfast &&
+                      !values.brunch &&
+                      !values.dessert &&
+                      !values.dinner &&
+                      !values.drink &&
+                      !values.lunch &&
+                      !values.snack
+                    }
                   />
                 </Col>
                 <Col>
@@ -304,7 +382,17 @@ class Upload extends React.Component {
                     onChange={handleChange}
                     value={values.lunch}
                     id="lunch"
-                    isInvalid={touched.lunch && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
+                    isInvalid={
+                      touched.lunch &&
+                      !values.appetizer &&
+                      !values.breakfast &&
+                      !values.brunch &&
+                      !values.dessert &&
+                      !values.dinner &&
+                      !values.drink &&
+                      !values.lunch &&
+                      !values.snack
+                    }
                   />
                 </Col>
                 <Col>
@@ -316,19 +404,40 @@ class Upload extends React.Component {
                     onChange={handleChange}
                     value={values.snack}
                     id="snack"
-                    isInvalid={touched.snack && !values.appetizer && !values.breakfast && !values.brunch && !values.dessert && !values.dinner && !values.drink && !values.lunch && !values.snack}
+                    isInvalid={
+                      touched.snack &&
+                      !values.appetizer &&
+                      !values.breakfast &&
+                      !values.brunch &&
+                      !values.dessert &&
+                      !values.dinner &&
+                      !values.drink &&
+                      !values.lunch &&
+                      !values.snack
+                    }
                   />
                 </Col>
               </Row>
-              <Row style={{ borderTop: "1px solid lightGray" }} className="pt-2">
+              <Row
+                style={{ borderTop: "1px solid lightGray" }}
+                className="pt-2"
+              >
                 <Col style={{ textAlign: "center" }}>
                   <label>Prep Time</label>
                 </Col>
-                <Col style={{ textAlign: "center", borderLeft: "1px solid lightGray" }}>
+                <Col
+                  style={{
+                    textAlign: "center",
+                    borderLeft: "1px solid lightGray"
+                  }}
+                >
                   <label>Cook Time</label>
                 </Col>
               </Row>
-              <Row style={{ borderBottom: "1px solid lightGray" }} className="pb-2">
+              <Row
+                style={{ borderBottom: "1px solid lightGray" }}
+                className="pb-2"
+              >
                 <Col>
                   <FormGroup>
                     <Form.Control
@@ -336,7 +445,11 @@ class Upload extends React.Component {
                       required
                       value={values.prepTimeHour}
                       onChange={handleChange}
-                      isInvalid={touched.prepTimeHour && values.prepTimeMinute === "0 Minutes" && values.prepTimeHour === "0 Hours"}
+                      isInvalid={
+                        touched.prepTimeHour &&
+                        values.prepTimeMinute === "0 Minutes" &&
+                        values.prepTimeHour === "0 Hours"
+                      }
                       name="prepTimeHour"
                     >
                       {hours.map((item, i) => (
@@ -345,7 +458,9 @@ class Upload extends React.Component {
                         </option>
                       ))}
                     </Form.Control>
-                    <Form.Control.Feedback type="invalid">Please input time</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                      Please input time
+                    </Form.Control.Feedback>
                   </FormGroup>
                 </Col>
                 <Col>
@@ -354,7 +469,11 @@ class Upload extends React.Component {
                       as="select"
                       required
                       value={values.prepTimeMinute}
-                      isInvalid={touched.prepTimeMinute && values.prepTimeMinute === "0 Minutes" && values.prepTimeHour === "0 Hours"}
+                      isInvalid={
+                        touched.prepTimeMinute &&
+                        values.prepTimeMinute === "0 Minutes" &&
+                        values.prepTimeHour === "0 Hours"
+                      }
                       onChange={handleChange}
                       name="prepTimeMinute"
                     >
@@ -373,7 +492,11 @@ class Upload extends React.Component {
                       required
                       value={values.cookTimeHour}
                       onChange={handleChange}
-                      isInvalid={touched.cookTimeHour && values.cookTimeMinute === "0 Minutes" && values.cookTimeHour === "0 Hours"}
+                      isInvalid={
+                        touched.cookTimeHour &&
+                        values.cookTimeMinute === "0 Minutes" &&
+                        values.cookTimeHour === "0 Hours"
+                      }
                       name="cookTimeHour"
                     >
                       {hours.map((item, i) => (
@@ -382,7 +505,9 @@ class Upload extends React.Component {
                         </option>
                       ))}
                     </Form.Control>
-                    <Form.Control.Feedback type="invalid">Please input time</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                      Please input time
+                    </Form.Control.Feedback>
                   </FormGroup>
                 </Col>
                 <Col>
@@ -391,7 +516,11 @@ class Upload extends React.Component {
                       as="select"
                       required
                       value={values.cookTimeMinute}
-                      isInvalid={touched.cookTimeMinute && values.cookTimeMinute === "0 Minutes" && values.cookTimeHour === "0 Hours"}
+                      isInvalid={
+                        touched.cookTimeMinute &&
+                        values.cookTimeMinute === "0 Minutes" &&
+                        values.cookTimeHour === "0 Hours"
+                      }
                       onChange={handleChange}
                       name="cookTimeMinute"
                     >
@@ -416,9 +545,14 @@ class Upload extends React.Component {
                   value={values.ingredients}
                   isInvalid={touched.ingredients && errors.ingredients}
                 />
-                <Form.Control.Feedback type="invalid">Please input the ingredients</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">
+                  Please input the ingredients
+                </Form.Control.Feedback>
               </Form.Group>
-              <Form.Group className="pt-2 pb-2" style={{ borderTop: "1px solid lightGray" }}>
+              <Form.Group
+                className="pt-2 pb-2"
+                style={{ borderTop: "1px solid lightGray" }}
+              >
                 <Form.Label>Instructions</Form.Label>
                 <Form.Control
                   as="textarea"
@@ -432,9 +566,14 @@ class Upload extends React.Component {
                   value={values.instructions}
                   isInvalid={touched.instructions && errors.instructions}
                 />
-                <Form.Control.Feedback type="invalid">Please input the instructions</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">
+                  Please input the instructions
+                </Form.Control.Feedback>
               </Form.Group>
-              <Form.Group className="pt-2 pb-2" style={{ borderTop: "1px solid lightGray" }}>
+              <Form.Group
+                className="pt-2 pb-2"
+                style={{ borderTop: "1px solid lightGray" }}
+              >
                 <Form.Label>
                   About This Recipe <small>(optional)</small>
                 </Form.Label>
@@ -447,9 +586,16 @@ class Upload extends React.Component {
                   value={values.about}
                 />
               </Form.Group>
-              <FormGroup className="pt-2 pb-2"
-                style={{ borderTop: "1px solid lightGray", borderBottom: "1px solid lightGray" }}>
-                <Form.Label>Hidden <small>(optional)</small></Form.Label>
+              <FormGroup
+                className="pt-2 pb-2"
+                style={{
+                  borderTop: "1px solid lightGray",
+                  borderBottom: "1px solid lightGray"
+                }}
+              >
+                <Form.Label>
+                  Hidden <small>(optional)</small>
+                </Form.Label>
                 <Form.Check
                   custom
                   type="checkbox"
@@ -463,19 +609,41 @@ class Upload extends React.Component {
                 <Col>
                   <Button variant="outline-success" type="submit">
                     Submit Recipe
-              </Button>
+                  </Button>
                 </Col>
-                {!this.state.cancel &&
+                {!this.state.cancel && (
                   <Col>
-                    <Button variant="outline-danger" onClick={() => { this.setState({ cancel: true }) }} className="float-right">Cancel</Button>
+                    <Button
+                      variant="outline-danger"
+                      onClick={() => {
+                        this.setState({ cancel: true });
+                      }}
+                      className="float-right"
+                    >
+                      Cancel
+                    </Button>
                   </Col>
-                }
-                {this.state.cancel &&
+                )}
+                {this.state.cancel && (
                   <Col>
-                    <Button variant="outline-dark" onClick={() => { this.setState({ cancel: false }) }} className="float-right">Nevermind</Button>
-                    <Button variant="danger" href="/" className="float-right mr-2">Cancel my post</Button>
+                    <Button
+                      variant="outline-dark"
+                      onClick={() => {
+                        this.setState({ cancel: false });
+                      }}
+                      className="float-right"
+                    >
+                      Nevermind
+                    </Button>
+                    <Button
+                      variant="danger"
+                      href="/"
+                      className="float-right mr-2"
+                    >
+                      Cancel my post
+                    </Button>
                   </Col>
-                }
+                )}
               </Row>
             </Form>
           )}

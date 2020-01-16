@@ -10,7 +10,7 @@ import Login from "./pages/login";
 import Users from "./pages/users";
 import User from "./pages/user";
 import Edit from "./pages/edit";
-import GlobalState from './context/GlobalState';
+import GlobalState from "./context/GlobalState";
 
 const App = props => {
   return (
@@ -31,6 +31,6 @@ const App = props => {
       </BrowserRouter>
     </GlobalState>
   );
-}
+};
 
 export default App;

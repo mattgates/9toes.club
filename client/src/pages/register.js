@@ -4,6 +4,7 @@ import { Alert, Container, Form, FormGroup, Button } from "react-bootstrap";
 import * as yup from "yup";
 import { Formik } from "formik";
 
+//page for registration
 class Register extends React.Component {
   constructor(props) {
     super(props);
@@ -15,12 +16,14 @@ class Register extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  //attempts to register a user
   handleSubmit(event) {
-    console.log("submitted");
+    //refer to login.js line 26. oops
     const hash = sha256(
       event.password + "placeholdersaltuntiligifigureouthowtohideit"
     );
 
+    //post request to register a new user
     fetch("/api/user/register", {
       method: "POST",
       headers: {
@@ -38,12 +41,15 @@ class Register extends React.Component {
         if (data.error) {
           this.setState({ response: data.error, registered: false });
         } else {
+          //redirects home if the user was accepted
+          //TODO auto login user if the registration happens
           this.props.history.push("/");
         }
       });
   }
 
   render() {
+    //schema for what form values are accepted
     const schema = yup.object().shape({
       username: yup
         .string()
@@ -138,8 +144,12 @@ class Register extends React.Component {
                   {errors.password}
                 </Form.Control.Feedback>
               </FormGroup>
-              <Button variant="outline-info" type="submit" className="mr-2">Create Account</Button>
-              <Button variant="outline-info" href="/login">I already have an account</Button>
+              <Button variant="outline-info" type="submit" className="mr-2">
+                Create Account
+              </Button>
+              <Button variant="outline-info" href="/login">
+                I already have an account
+              </Button>
             </Form>
           )}
         />
